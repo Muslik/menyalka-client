@@ -1,0 +1,28 @@
+<%
+const { apiConfig, routes, utils, config } = it;
+const { info, servers, externalDocs } = apiConfig;
+const { _, require, formatDescription } = utils;
+
+const server = (servers && servers[0]) || { url: "" };
+%>
+
+import { requestFx } from '../request';
+import { createEffect } from 'effector';
+
+<% if (routes.outOfModule) { %>
+  <% for (const route of routes.outOfModule) { %>
+
+  <%~ includeFile('./procedure-call.ejs', { ...it, route }) %>
+
+  <% } %>
+<% } %>
+
+<% if (routes.combined) { %>
+  <% for (const { routes: combinedRoutes = [], moduleName } of routes.combined) { %>
+  <% for (const route of combinedRoutes) { %>
+
+  <%~ includeFile('./procedure-call.ejs', { ...it, route }) %>
+
+  <% } %>
+  <% } %>
+<% } %>
