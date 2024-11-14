@@ -1,8 +1,15 @@
+import { createRouteView } from 'atomic-router-react';
 import { lazy } from 'react';
 
-import { currentRoute } from './model';
+import { PageLoader } from '~/shared/ui/PageLoader';
+
+import { anonymousRoute, currentRoute } from './model';
 
 export const HomeRoute = {
-  view: lazy(() => import('./home-page')),
+  view: createRouteView({
+    route: anonymousRoute,
+    view: lazy(() => import('./home-page')),
+    otherwise: PageLoader,
+  }),
   route: currentRoute,
 };

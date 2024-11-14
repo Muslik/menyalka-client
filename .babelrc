@@ -3,7 +3,8 @@
     [
       "effector/babel-plugin",
       {
-        "addNames": true
+        "addNames": true,
+        "factories": ["@effector-reform/core", "effector-forms"]
       }
     ]
   ]

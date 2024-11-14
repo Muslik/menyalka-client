@@ -1,0 +1,1 @@
+export { wrapEventToFx } from './wrapEventToFx';

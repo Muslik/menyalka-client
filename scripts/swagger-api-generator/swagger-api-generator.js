@@ -1,9 +1,7 @@
 import 'dotenv/config';
 import path, { resolve } from 'path';
-import pkg from 'swagger-typescript-api';
+import { generateApi } from 'swagger-typescript-api';
 import { fileURLToPath } from 'url';
-
-const { generateApi } = pkg;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

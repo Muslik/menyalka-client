@@ -7,16 +7,14 @@ import { logger } from '~/shared/lib/logger';
 import { Answer, Request } from '../types';
 import { clientRequest } from './client';
 
-export const sendRequestFx = createEffect<Request, Answer, Answer>({
-  handler: async (params) => {
-    const abortController = new AbortController();
+export const sendRequestFx = createEffect<Request, Answer, Answer>(async (params) => {
+  const abortController = new AbortController();
 
-    onAbort(() => {
-      abortController.abort();
-    });
+  onAbort(() => {
+    abortController.abort();
+  });
 
-    return clientRequest({ ...params, signal: abortController.signal });
-  },
+  return clientRequest({ ...params, signal: abortController.signal });
 });
 
 export const setCookiesForRequest = createEvent<string>();
