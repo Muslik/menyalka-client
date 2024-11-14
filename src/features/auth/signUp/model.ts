@@ -98,8 +98,6 @@ createAction({
         });
         break;
       }
-      default:
-        assertUnreachable(error);
     }
   },
 });

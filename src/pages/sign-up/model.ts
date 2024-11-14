@@ -15,6 +15,7 @@ sample({
   clock: currentRoute.opened,
   fn: () => ({
     text: i18n.t('signUp.submit'),
+    handler: signUpModel.form.submit,
   }),
   target: mainButton.show,
 });

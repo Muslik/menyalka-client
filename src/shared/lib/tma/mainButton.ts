@@ -1,5 +1,7 @@
 import { EventListener, mainButton as tgMainButton } from '@telegram-apps/sdk-react';
-import { attach, createEffect, createEvent, createStore, sample } from 'effector';
+import { is, attach, createEffect, createEvent, createStore, sample, scopeBind } from 'effector';
+
+import { scope } from '~/shared/config/init';
 
 type MainButtonParams = Parameters<typeof tgMainButton.setParams>[0] & {
   handler?: EventListener<'main_button_pressed'>;
@@ -19,7 +21,11 @@ const onClickFx = createEffect<
   EventListener<'main_button_pressed'>,
   EventListener<'main_button_pressed'>
 >((handler) => {
-  tgMainButton.onClick(handler);
+  if (is.event(handler)) {
+    tgMainButton.onClick(scopeBind(handler, { scope }));
+  } else {
+    tgMainButton.onClick(handler);
+  }
 
   return handler;
 });

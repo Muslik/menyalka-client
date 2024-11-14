@@ -1,13 +1,8 @@
 import { Avatar, Caption, Input, Placeholder } from '@telegram-apps/telegram-ui';
 import cls from 'clsx';
-import { scopeBind } from 'effector';
 import { useForm } from 'effector-forms';
-import { useUnit } from 'effector-react';
-import { useLayoutEffect } from 'react';
 
 import { i18n } from '~/shared/config/i18n';
-import { scope } from '~/shared/config/init';
-import { mainButton } from '~/shared/lib/tma';
 import { useFormErrorFocus } from '~/shared/lib/useFormErrors';
 import { Notification } from '~/shared/ui/Notification';
 
@@ -15,20 +10,8 @@ import { MAX_USERNAME_LENGTH, form } from './model';
 import styles from './sign-up-form.module.scss';
 
 export const SignUpForm = () => {
-  const [mainButtonOnClick, mainButtonOffClick] = useUnit([
-    mainButton.onClick,
-    mainButton.offClick,
-  ]);
   const { fields, hasError, errorText } = useForm(form);
   const { formRef } = useFormErrorFocus(form);
-
-  useLayoutEffect(() => {
-    mainButtonOnClick(scopeBind(form.submit, { scope }));
-
-    return () => {
-      mainButtonOffClick();
-    };
-  }, []);
 
   return (
     <form ref={formRef}>
