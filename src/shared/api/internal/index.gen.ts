@@ -1,3 +1,5 @@
+ 
+
 /* tslint:disable */
 
 /*
@@ -162,7 +164,6 @@ export const authMeFx = createEffect<AuthMeParams, UserAuthDto, UnauthorizedExce
   const response = await requestFx({
     path: `/auth/me`,
     method: 'post',
-    secure: true,
   });
 
   if (response.status === 500) {
@@ -189,7 +190,6 @@ export const authLogoutFx = createEffect<AuthLogoutParams, void, UnauthorizedExc
     const response = await requestFx({
       path: `/auth/logout`,
       method: 'post',
-      secure: true,
     });
 
     if (response.status === 500) {
@@ -246,7 +246,6 @@ export const userAssignRoleToUserFx = createEffect<
     path: `/users/${userId}/role`,
     method: 'post',
     body: data,
-    secure: true,
   });
 
   if (response.status === 500) {

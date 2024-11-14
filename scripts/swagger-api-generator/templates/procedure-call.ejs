@@ -2,7 +2,7 @@
 const { utils, route, config } = it;
 const { requestBodyInfo, responseBodyInfo } = route;
 const { _, getInlineParseContent, getParseContent, parseSchema, getComponentByRef, require } = utils;
-const { headers, parameters, path, method, payload, query, formData, security, requestParams } = route.request;
+const { headers, parameters, path, method, payload, query, formData, requestParams } = route.request;
 const { type, errorType, contentTypes } = route.response;
 const routeDocs = includeFile("@base/route-docs", { config, route, utils });
 const queryName = (query && query.name) || "query";
@@ -43,7 +43,6 @@ const parameterNames = wrapperArgs.map(argToParameterName).join(',')
 
 const bodyTmpl = _.get(payload, "name") || null;
 const queryTmpl = (query != null && queryName) || null;
-const securityTmpl = security ? 'true' : null;
 %>
 
 <%~ requestParamsType %>
@@ -55,7 +54,6 @@ export const <%~ variableName %>Fx = createEffect<<%~ typeParamsVariableName %>,
             <%~ headers ? `headers,` : '' %>
             <%~ queryTmpl ? `query,` : '' %>
             <%~ bodyTmpl ? `body: ${bodyTmpl},` : '' %>
-            <%~ securityTmpl ? `secure: ${securityTmpl},` : '' %>
         })
 
         if (response.status === 500) {
