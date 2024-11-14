@@ -2,7 +2,7 @@
 const { utils, route, config } = it;
 const { requestBodyInfo, responseBodyInfo } = route;
 const { _, getInlineParseContent, getParseContent, parseSchema, getComponentByRef, require } = utils;
-const { parameters, path, method, payload, query, formData, security, requestParams } = route.request;
+const { headers, parameters, path, method, payload, query, formData, requestParams } = route.request;
 const { type, errorType, contentTypes } = route.response;
 const routeDocs = includeFile("@base/route-docs", { config, route, utils });
 const queryName = (query && query.name) || "query";
@@ -21,6 +21,7 @@ const argToRequestParam = ({ name, type, optional }) => `${name}${optional ? '?'
 
 const rawWrapperArgs = _.compact([
         ...pathParams,
+        headers,
         query,
         payload,
     ])
@@ -42,20 +43,28 @@ const parameterNames = wrapperArgs.map(argToParameterName).join(',')
 
 const bodyTmpl = _.get(payload, "name") || null;
 const queryTmpl = (query != null && queryName) || null;
-const securityTmpl = security ? 'true' : null;
 %>
 
 <%~ requestParamsType %>
 
-export const <%~ variableName %>Fx = createEffect<<%~ typeParamsVariableName %>, <%~ type %>, <%~ errorType  %>>({
-    async handler(<%~ parameterNames.length ? `{ ${parameterNames} }` : '' %>) {
+export const <%~ variableName %>Fx = createEffect<<%~ typeParamsVariableName %>, <%~ type %>, <%~ errorType  %>>(async (<%~ parameterNames.length ? `{ ${parameterNames} }` : '' %>) => {
         const response = await requestFx({
             path: `<%~ path %>`,
             method: '<%~ method %>',
+            <%~ headers ? `headers,` : '' %>
             <%~ queryTmpl ? `query,` : '' %>
             <%~ bodyTmpl ? `body: ${bodyTmpl},` : '' %>
-            <%~ securityTmpl ? `secure: ${securityTmpl},` : '' %>
         })
+
+        if (response.status === 500) {
+          notificationShow({
+            type: NotificationType.error,
+            title: i18n.t("errors.internalServerError.title"),
+            description: i18n.t("errors.internalServerError.description"),
+            isCloseable: true,
+          })
+          throw new Error('Internal server error');
+        }
 
         if (response.status >= 400) {
             throw response.body as <%~ errorType %>
@@ -63,4 +72,4 @@ export const <%~ variableName %>Fx = createEffect<<%~ typeParamsVariableName %>,
 
         return response.body as <%~ type %>
     }
-});
+);

@@ -3,18 +3,35 @@ import '@telegram-apps/telegram-ui/dist/styles.css';
 import { RouterProvider } from 'atomic-router-react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
+import { useUnit } from 'effector-react';
+import { Suspense } from 'react';
 
 import { Pages } from '~/pages';
+import { $tgInitStatus } from '~/shared/lib/tma';
 import { router } from '~/shared/routing';
+import { EnvUnsupported } from '~/shared/ui/EnvUnsupported';
+import { Notification } from '~/shared/ui/Notification';
+import { PageLoader } from '~/shared/ui/PageLoader';
+
+import './index.scss';
+import './model';
 
 dayjs.locale('ru');
 
 export function App() {
+  const tgInitStatus = useUnit($tgInitStatus);
+  if (tgInitStatus === 'fail') {
+    return <EnvUnsupported />;
+  }
+
   return (
-    <RouterProvider router={router}>
-      <AppRoot>
-        <Pages />
-      </AppRoot>
-    </RouterProvider>
+    <Suspense fallback={<PageLoader />}>
+      <RouterProvider router={router}>
+        <AppRoot>
+          <Pages />
+          <Notification />
+        </AppRoot>
+      </RouterProvider>
+    </Suspense>
   );
 }

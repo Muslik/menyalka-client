@@ -1,0 +1,8 @@
+@use '~/shared/ui/styles/reset';
+
+.button {
+  @include reset.button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

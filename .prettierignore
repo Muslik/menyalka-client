@@ -3,3 +3,4 @@
 .prettierignore
 .env
 .env.*
+index.gen.ts
