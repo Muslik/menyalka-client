@@ -1,1 +1,1 @@
-export * as signInTelegramModel from './model';
+export * as signInModel from './model';

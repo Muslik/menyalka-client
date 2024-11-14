@@ -1,5 +1,5 @@
 import { createMutation } from '@farfetched/core';
-import { createEvent, sample } from 'effector';
+import { sample } from 'effector';
 import { createAction } from 'effector-action';
 import { createForm } from 'effector-forms';
 
@@ -10,8 +10,6 @@ import { typedKeys } from '~/shared/lib/typedObject';
 import { rules } from '~/shared/lib/validation-rules';
 import { sessionRequestQuery } from '~/shared/session';
 import { NotificationType, notificationShow } from '~/shared/ui/Notification';
-
-export const formSubmitted = createEvent<Form>();
 
 export type Form = {
   username: string;
@@ -37,16 +35,18 @@ export const form = createForm({
         }),
         rules.regex(USERNAME_REGEX, {
           message: i18n.t('validation.username.matches'),
+          ruleName: 'IS_ALPHANUMERIC',
         }),
         rules.refine((value) => (value.match(LETTERS_REGEX) || []).length >= MIN_LETTERS_COUNT, {
           message: i18n.t('validation.username.letters'),
+          ruleName: 'MIN_LETTERS',
         }),
       ],
     },
   },
 });
 
-const signUpTelegramMutation = createMutation({
+export const signUpTelegramMutation = createMutation({
   effect: internalApi.authOauthSignUpFx,
 });
 
