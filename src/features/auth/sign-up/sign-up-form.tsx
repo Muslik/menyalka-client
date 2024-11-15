@@ -11,7 +11,7 @@ export const SignUpForm = () => {
   const { formRef } = useFormErrorFocus(form);
 
   return (
-    <form ref={formRef}>
+    <form ref={formRef} onSubmit={(event) => event.preventDefault()}>
       <Placeholder header={i18n.t('signUp.title')} description={i18n.t('signUp.description')}>
         <Avatar size={96} acronym="M" />
       </Placeholder>
@@ -31,7 +31,7 @@ const Username = reflect({
       (value) => `${i18n.t('username.title')} * (${value.length}/${MAX_USERNAME_LENGTH})`,
     ),
     placeholder: i18n.t('username.placeholder'),
-    status: form.fields.username.$errorText.map((error) => (error ? 'error' : undefined)),
+    status: form.fields.username.$errorText.map((error) => (error ? 'error' : 'default')),
   },
   view: Input,
 });
