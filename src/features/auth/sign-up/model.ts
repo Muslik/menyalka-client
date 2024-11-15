@@ -9,7 +9,7 @@ import { $launchParams } from '~/shared/lib/tma';
 import { typedKeys } from '~/shared/lib/typedObject';
 import { rules } from '~/shared/lib/validation-rules';
 import { sessionRequestQuery } from '~/shared/session';
-import { NotificationType, notificationShow } from '~/shared/ui/Notification';
+import { NotificationType, notificationShow } from '~/shared/ui/notification';
 
 export type Form = {
   username: string;
