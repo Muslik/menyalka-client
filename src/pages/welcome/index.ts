@@ -1,7 +1,7 @@
 import { createRouteView } from 'atomic-router-react';
 import { lazy } from 'react';
 
-import { PageLoader } from '~/shared/ui/PageLoader';
+import { PageLoader } from '~/shared/ui/page-loader';
 
 import { anonymousRoute, currentRoute } from './model';
 

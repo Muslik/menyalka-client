@@ -1,6 +1,6 @@
 import { sample } from 'effector';
 
-import { signUpModel } from '~/features/auth/signUp';
+import { signUpModel } from '~/features/auth/sign-up';
 import { i18n } from '~/shared/config/i18n';
 import { $launchParams, mainButton } from '~/shared/lib/tma';
 import { routes } from '~/shared/routing';

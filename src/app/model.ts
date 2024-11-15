@@ -1,6 +1,6 @@
 import { createStore, sample } from 'effector';
 
-import { signInModel } from '~/features/auth/signIn';
+import { signInModel } from '~/features/auth/sign-in';
 import { $launchParams } from '~/shared/lib/tma';
 import { routes } from '~/shared/routing';
 import { sessionRequestQuery } from '~/shared/session';
