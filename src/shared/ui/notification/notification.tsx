@@ -9,7 +9,6 @@ import { IconCheck24 } from '../icons/IconCheck24';
 import { IconLightbulb24 } from '../icons/IconLightbulb24';
 import { IconNotifications24 } from '../icons/IconNotifications24';
 import { IconNotificationsColoredSquare32 } from '../icons/IconNotificationsColoredSquare32';
-import styles from './Notification.module.scss';
 import {
   $notification,
   $notificationState,
@@ -18,6 +17,7 @@ import {
   notificationClosed,
   notificationHide,
 } from './model';
+import styles from './notification.module.scss';
 
 const NOTIFICATION_CONFIG = {
   error: {
