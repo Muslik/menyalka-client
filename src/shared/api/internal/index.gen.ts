@@ -1,7 +1,5 @@
  
-
 /* tslint:disable */
-
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
@@ -10,10 +8,11 @@
  * ## SOURCE: https://github.com/acacode/swagger-typescript-api ##
  * ---------------------------------------------------------------
  */
+
 import { createEffect } from 'effector';
 
 import { i18n } from '~/shared/config/i18n';
-import { NotificationType, notificationShow } from '~/shared/ui/Notification';
+import { NotificationType, notificationShow } from '~/shared/ui/notification';
 
 import { requestFx } from '../request';
 

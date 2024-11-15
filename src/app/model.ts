@@ -1,6 +1,6 @@
 import { createStore, sample } from 'effector';
 
-import { signInTelegramModel } from '~/features/auth/signIn';
+import { signInModel } from '~/features/auth/sign-in';
 import { $launchParams } from '~/shared/lib/tma';
 import { routes } from '~/shared/routing';
 import { sessionRequestQuery } from '~/shared/session';
@@ -10,7 +10,7 @@ const $isInitialized = createStore(false);
 sample({
   clock: [
     sessionRequestQuery.finished.success,
-    signInTelegramModel.signInTelegramMutation.finished.success,
+    signInModel.signInTelegramMutation.finished.success,
   ],
   fn: () => true,
   target: $isInitialized,
@@ -25,24 +25,17 @@ sample({
       authorization: `tma ${params?.initDataRaw}`,
     },
   }),
-  target: signInTelegramModel.signInTelegramMutation.start,
+  target: signInModel.signInTelegramMutation.start,
 });
 
 sample({
-  clock: signInTelegramModel.signInTelegramMutation.finished.success,
+  clock: signInModel.signInTelegramMutation.finished.success,
   filter: ({ result }) => result.status === 'needSignUp',
   target: routes.signUp.open,
 });
 
 sample({
-  clock: signInTelegramModel.signInTelegramMutation.finished.success,
+  clock: signInModel.signInTelegramMutation.finished.success,
   filter: ({ result }) => result.status === 'success',
   target: sessionRequestQuery.start,
 });
-
-/* sample({ */
-/*   source: $authenticationStatus,  */
-/*   clock: $isInitialized, */
-/*   filter: (status, isInitialized) => status === AuthStatus.Anonymous && isInitialized, */
-/*   target: routes.error.open, */
-/* }) */

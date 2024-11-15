@@ -1,6 +1,6 @@
 import { sample } from 'effector';
 
-import { signUpModel } from '~/features/auth/signUp';
+import { signUpModel } from '~/features/auth/sign-up';
 import { i18n } from '~/shared/config/i18n';
 import { $launchParams, mainButton } from '~/shared/lib/tma';
 import { routes } from '~/shared/routing';
@@ -15,13 +15,24 @@ sample({
   clock: currentRoute.opened,
   fn: () => ({
     text: i18n.t('signUp.submit'),
+    handler: signUpModel.form.submit,
+    hasShineEffect: true,
+  }),
+  target: mainButton.show,
+});
+
+sample({
+  clock: [signUpModel.signUpTelegramMutation.$pending],
+  fn: (isPending) => ({
+    isLoaderVisible: isPending,
+    isEnabled: !isPending,
   }),
   target: mainButton.show,
 });
 
 sample({
   clock: currentRoute.closed,
-  target: mainButton.destroy,
+  target: mainButton.hide,
 });
 
 sample({

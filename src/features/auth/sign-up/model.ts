@@ -1,7 +1,8 @@
 import { createMutation } from '@farfetched/core';
-import { createEvent, sample } from 'effector';
+import { sample } from 'effector';
 import { createAction } from 'effector-action';
 import { createForm } from 'effector-forms';
+import { not } from 'patronum';
 
 import { internalApi } from '~/shared/api';
 import { i18n } from '~/shared/config/i18n';
@@ -9,9 +10,7 @@ import { $launchParams } from '~/shared/lib/tma';
 import { typedKeys } from '~/shared/lib/typedObject';
 import { rules } from '~/shared/lib/validation-rules';
 import { sessionRequestQuery } from '~/shared/session';
-import { NotificationType, notificationShow } from '~/shared/ui/Notification';
-
-export const formSubmitted = createEvent<Form>();
+import { NotificationType, notificationShow } from '~/shared/ui/notification';
 
 export type Form = {
   username: string;
@@ -37,22 +36,25 @@ export const form = createForm({
         }),
         rules.regex(USERNAME_REGEX, {
           message: i18n.t('validation.username.matches'),
+          ruleName: 'IS_ALPHANUMERIC',
         }),
         rules.refine((value) => (value.match(LETTERS_REGEX) || []).length >= MIN_LETTERS_COUNT, {
           message: i18n.t('validation.username.letters'),
+          ruleName: 'MIN_LETTERS',
         }),
       ],
     },
   },
 });
 
-const signUpTelegramMutation = createMutation({
+export const signUpTelegramMutation = createMutation({
   effect: internalApi.authOauthSignUpFx,
 });
 
 sample({
   source: $launchParams,
   clock: form.formValidated,
+  filter: not(signUpTelegramMutation.$pending),
   fn: (params, form) => ({
     headers: {
       authorization: `tma ${params?.initDataRaw}`,
@@ -98,8 +100,6 @@ createAction({
         });
         break;
       }
-      default:
-        assertUnreachable(error);
     }
   },
 });
