@@ -2,6 +2,7 @@ import { createMutation } from '@farfetched/core';
 import { sample } from 'effector';
 import { createAction } from 'effector-action';
 import { createForm } from 'effector-forms';
+import { not } from 'patronum';
 
 import { internalApi } from '~/shared/api';
 import { i18n } from '~/shared/config/i18n';
@@ -53,6 +54,7 @@ export const signUpTelegramMutation = createMutation({
 sample({
   source: $launchParams,
   clock: form.formValidated,
+  filter: not(signUpTelegramMutation.$pending),
   fn: (params, form) => ({
     headers: {
       authorization: `tma ${params?.initDataRaw}`,

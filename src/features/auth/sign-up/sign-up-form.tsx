@@ -5,7 +5,7 @@ import { i18n } from '~/shared/config/i18n';
 import { useFormErrorFocus } from '~/shared/lib/useFormErrors';
 import { ErrorCaption } from '~/shared/ui/error-caption';
 
-import { MAX_USERNAME_LENGTH, form } from './model';
+import { MAX_USERNAME_LENGTH, form, signUpTelegramMutation } from './model';
 
 export const SignUpForm = () => {
   const { formRef } = useFormErrorFocus(form);
@@ -26,12 +26,15 @@ const Username = reflect({
     name: 'username',
     onBlur: () => form.fields.username.onBlur(),
     value: form.fields.username.$value,
-    onChange: ({ target: { value } }) => form.fields.username.onChange(value),
+    onChange: ({ target: { value } }) => form.fields.username.onChange(value.trim()),
     header: form.fields.username.$value.map(
       (value) => `${i18n.t('username.title')} * (${value.length}/${MAX_USERNAME_LENGTH})`,
     ),
     placeholder: i18n.t('username.placeholder'),
-    status: form.fields.username.$errorText.map((error) => (error ? 'error' : 'default')),
+    status: form.fields.username.$errorText.map((error) => (error ? 'error' : undefined), {
+      skipVoid: false,
+    }),
+    disabled: signUpTelegramMutation.$pending,
   },
   view: Input,
 });
