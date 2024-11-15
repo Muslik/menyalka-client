@@ -32,7 +32,7 @@ sample({
 
 sample({
   clock: currentRoute.closed,
-  target: mainButton.destroy,
+  target: mainButton.hide,
 });
 
 sample({
