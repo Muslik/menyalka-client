@@ -16,6 +16,16 @@ sample({
   fn: () => ({
     text: i18n.t('signUp.submit'),
     handler: signUpModel.form.submit,
+    hasShineEffect: true,
+  }),
+  target: mainButton.show,
+});
+
+sample({
+  clock: [signUpModel.signUpTelegramMutation.$pending],
+  fn: (isPending) => ({
+    isLoaderVisible: isPending,
+    isEnabled: !isPending,
   }),
   target: mainButton.show,
 });

@@ -1,40 +1,44 @@
-import { Avatar, Caption, Input, Placeholder } from '@telegram-apps/telegram-ui';
-import cls from 'clsx';
-import { useForm } from 'effector-forms';
+import { reflect } from '@effector/reflect';
+import { Avatar, Input, Placeholder } from '@telegram-apps/telegram-ui';
 
 import { i18n } from '~/shared/config/i18n';
 import { useFormErrorFocus } from '~/shared/lib/useFormErrors';
-import { Notification } from '~/shared/ui/Notification';
+import { ErrorCaption } from '~/shared/ui/error-caption';
 
 import { MAX_USERNAME_LENGTH, form } from './model';
-import styles from './sign-up-form.module.scss';
 
 export const SignUpForm = () => {
-  const { fields, hasError, errorText } = useForm(form);
   const { formRef } = useFormErrorFocus(form);
 
   return (
     <form ref={formRef}>
-      <Notification />
       <Placeholder header={i18n.t('signUp.title')} description={i18n.t('signUp.description')}>
         <Avatar size={96} acronym="M" />
       </Placeholder>
-      <Input
-        name="username"
-        value={fields.username.value}
-        onBlur={() => fields.username.onBlur()}
-        onChange={({ target: { value } }) => fields.username.onChange(value)}
-        style={{ padding: 0 }}
-        className={styles.input}
-        header={`${i18n.t('username.title')} * (${fields.username.value.length}/${MAX_USERNAME_LENGTH})`}
-        placeholder={i18n.t('username.placeholder')}
-        status={hasError('username') ? 'error' : undefined}
-      />
-      {hasError('username') && (
-        <Caption className={cls(styles.caption, styles.captionError)} level="2" Component="div">
-          {errorText('username')}
-        </Caption>
-      )}
+      <Username />
+      <UsernameError />
     </form>
   );
 };
+
+const Username = reflect({
+  bind: {
+    name: 'username',
+    onBlur: () => form.fields.username.onBlur(),
+    value: form.fields.username.$value,
+    onChange: ({ target: { value } }) => form.fields.username.onChange(value),
+    header: form.fields.username.$value.map(
+      (value) => `${i18n.t('username.title')} * (${value.length}/${MAX_USERNAME_LENGTH})`,
+    ),
+    placeholder: i18n.t('username.placeholder'),
+    status: form.fields.username.$errorText.map((error) => (error ? 'error' : undefined)),
+  },
+  view: Input,
+});
+
+const UsernameError = reflect({
+  bind: {
+    text: form.fields.username.$errorText,
+  },
+  view: ErrorCaption,
+});
