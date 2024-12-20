@@ -128,10 +128,6 @@ sample({
   target: initTgAppFx,
 });
 
-initTgAppFx.doneData.watch(() => {
-  console.log('Done data init');
-});
-
 sample({
   clock: initTgAppFx.doneData,
   target: $launchParams,

@@ -10,6 +10,13 @@ const __dirname = dirname(__filename);
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+      },
+    },
+  },
   plugins: [
     react({
       babel: { babelrc: true },

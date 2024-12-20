@@ -9,9 +9,9 @@ import { Suspense } from 'react';
 import { Pages } from '~/pages';
 import { $tgInitStatus } from '~/shared/lib/tma';
 import { router } from '~/shared/routing';
-import { EnvUnsupported } from '~/shared/ui/EnvUnsupported';
-import { Notification } from '~/shared/ui/Notification';
-import { PageLoader } from '~/shared/ui/PageLoader';
+import { EnvUnsupported } from '~/shared/ui/env-unsupported';
+import { Notification } from '~/shared/ui/notification';
+import { PageLoader } from '~/shared/ui/page-loader';
 
 import './index.scss';
 import './model';

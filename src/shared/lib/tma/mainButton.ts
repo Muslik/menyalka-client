@@ -1,5 +1,7 @@
 import { EventListener, mainButton as tgMainButton } from '@telegram-apps/sdk-react';
-import { attach, createEffect, createEvent, createStore, sample } from 'effector';
+import { attach, createEffect, createEvent, createStore, is, sample, scopeBind } from 'effector';
+
+import { scope } from '~/shared/config/init';
 
 type MainButtonParams = Parameters<typeof tgMainButton.setParams>[0] & {
   handler?: EventListener<'main_button_pressed'>;
@@ -9,24 +11,20 @@ const mount = createEvent();
 const unmount = createEvent();
 const set = createEvent<MainButtonParams>();
 const hide = createEvent();
-const destroy = createEvent();
 
 const $handler = createStore<EventListener<'main_button_pressed'> | null>(null);
-const onClick = createEvent<EventListener<'main_button_pressed'>>();
-const offClick = createEvent();
 
 const onClickFx = createEffect<
   EventListener<'main_button_pressed'>,
   EventListener<'main_button_pressed'>
 >((handler) => {
-  tgMainButton.onClick(handler);
+  if (is.event(handler)) {
+    tgMainButton.onClick(scopeBind(handler, { scope }));
+  } else {
+    tgMainButton.onClick(handler);
+  }
 
   return handler;
-});
-
-sample({
-  clock: onClick,
-  target: onClickFx,
 });
 
 sample({
@@ -34,58 +32,18 @@ sample({
   target: $handler,
 });
 
-sample({
-  clock: hide,
-  fn: () => ({
-    isVisible: false,
-  }),
-  target: set,
-});
+const setParamsFx = createEffect<MainButtonParams, void>(
+  async ({ handler, isVisible, ...params }) => {
+    tgMainButton.setParams({
+      ...params,
+      isVisible: isVisible ?? true,
+    });
 
-const offClickFx = attach({
-  source: $handler,
-  effect: (handler) => {
     if (handler) {
-      tgMainButton.offClick(handler);
+      onClickFx(handler);
     }
   },
-});
-
-sample({
-  clock: [offClick, destroy],
-  target: offClickFx,
-});
-
-sample({
-  clock: offClickFx.done,
-  fn: () => null,
-  target: $handler,
-});
-
-sample({
-  clock: destroy,
-  fn: () => ({
-    isVisible: false,
-    backgroundColor: undefined,
-    hasShineEffect: false,
-    isEnabled: false,
-    isLoaderVisible: false,
-    text: undefined,
-    textColor: undefined,
-  }),
-  target: set,
-});
-
-const setParamsFx = createEffect<MainButtonParams, void>(({ handler, isVisible, ...params }) => {
-  tgMainButton.setParams({
-    ...params,
-    isVisible: isVisible ?? true,
-  });
-
-  if (handler) {
-    onClickFx(handler);
-  }
-});
+);
 
 const mountMainButtonFx = createEffect(tgMainButton.mount);
 const unmountMainButtonFx = createEffect(tgMainButton.unmount);
@@ -99,6 +57,40 @@ const $isVisible = createStore(false);
 const changeIsVisible = createEvent<boolean>();
 
 tgMainButton.isVisible.sub(changeIsVisible);
+
+const offClickFx = attach({
+  source: $handler,
+  effect: (handler) => {
+    if (handler) {
+      tgMainButton.offClick(handler);
+    }
+  },
+});
+
+sample({
+  clock: hide,
+  target: offClickFx,
+});
+
+sample({
+  clock: offClickFx.done,
+  fn: () => null,
+  target: $handler,
+});
+
+sample({
+  clock: hide,
+  fn: () => ({
+    isVisible: false,
+    backgroundColor: undefined,
+    hasShineEffect: false,
+    isEnabled: true,
+    isLoaderVisible: false,
+    text: undefined,
+    textColor: undefined,
+  }),
+  target: set,
+});
 
 sample({
   clock: set,
@@ -120,9 +112,6 @@ export const mainButton = {
   $isVisible,
   show: set,
   hide,
-  destroy,
-  onClick,
-  offClick,
   mount,
   unmount,
 };

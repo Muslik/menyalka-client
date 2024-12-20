@@ -4,27 +4,28 @@ import { createRule } from './createZodRule';
 
 type Params = {
   message?: string;
+  ruleName?: string;
 };
 
 export const rules = {
   minLength: (min: number, params?: Params) =>
     createRule({
-      name: 'minLength',
+      name: 'MIN_LENGTH',
       schema: z.string().min(min, { message: params?.message }),
     }),
   maxLength: (max: number, params?: Params) =>
     createRule({
-      name: 'maxLength',
+      name: 'MAX_LENGTH',
       schema: z.string().max(max, { message: params?.message }),
     }),
   regex: (regex: RegExp, params?: Params) =>
     createRule({
-      name: 'regex',
+      name: params?.ruleName ?? 'regex',
       schema: z.string().regex(regex, { message: params?.message }),
     }),
   refine: (fn: (value: string) => boolean, params?: Params) =>
     createRule({
-      name: 'refine',
+      name: params?.ruleName ?? 'refine',
       schema: z.string().refine(fn, { message: params?.message }),
     }),
 };
